@@ -2,27 +2,27 @@
 
 ## Descripción
 
-NEXUS es un parque deportivo, recreativo y gastronómico. La plataforma digital debe acompañar la operación integral del complejo —sitio público, clientes y socios, reservas, pagos, membresías, clases, recepción, acceso y administración—, no reducirlo a una página de alquiler de canchas.
+NEXUS es un parque deportivo, recreativo y gastronómico. La plataforma digital debe acompañar la operación integral del complejo —sitio público, clientes y socios, reservas, pagos, membresías, clases, recepción, acceso y administración— y no reducirlo a una página de alquiler de canchas.
 
 ## Estado del repositorio
 
-**Revisión del repositorio:** `eduardoyedgardo2015-sudo/eduardoyedahrdo2015-sudo.github.io`, rama `main`.
+**Repositorio revisado:** `eduardoyedgardo2015-sudo/eduardoyedahrdo2015-sudo.github.io`, rama `main`.
 
-**Estado comprobado:** sitio estático con `index.html`, `styles.css`, `script.js`, `config.js`, `README.txt` y `assets/`. El HTML presenta el concepto y las interacciones actuales son de navegación, modal informativo y configuración de enlaces. No se encontraron backend, esquema de datos, migraciones, autenticación, pagos, reservas reales, membresías, QR ni panel administrativo.
+**Estado observado en la revisión:** sitio estático con `index.html`, `styles.css`, `script.js`, `config.js`, `README.txt` y `assets/`. El HTML presenta el concepto del parque y las interacciones actuales se limitan a navegación, modal informativo y configuración de enlaces. En la revisión no se encontraron backend, esquema de datos, migraciones, autenticación, pagos, reservas reales, membresías, QR ni panel administrativo.
 
-**Última revisión documental:** 2026-11-23. La revisión describe los archivos accesibles en el repositorio en esa fecha; volver a verificar antes de iniciar una implementación.
+**Fecha de revisión documental:** 2026-11-22. La revisión describe los archivos accesibles en el repositorio en esa fecha; volver a verificar antes de iniciar una implementación.
 
 ## Cómo leer esta documentación
 
 Las etiquetas tienen significado estricto:
 
-- **CONFIRMADO:** requisito o decisión funcional expresamente establecidos por el Documento Maestro proporcionado por el usuario.
-- **PROPUESTO:** recomendación técnica; no constituye una aprobación funcional ni de proveedor adicional.
+- **CONFIRMADO:** requisito o decisión funcional expresamente establecidos por el Documento Maestro y las decisiones del proyecto.
+- **PROPUESTO:** recomendación técnica; no constituye una aprobación funcional ni la selección de un proveedor adicional.
 - **PENDIENTE:** decisión, dato operativo o regla todavía no definida.
-- **IMPLEMENTADO:** conducta observada directamente en los archivos actuales.
+- **IMPLEMENTADO:** comportamiento observado directamente en los archivos actuales.
 - **NO IMPLEMENTADO:** función planificada, pero ausente del repositorio revisado.
 
-La prioridad de fuentes es: decisiones funcionales del Documento Maestro, revisión del repositorio, y recomendaciones técnicas compatibles. Una propuesta nunca reemplaza una decisión pendiente.
+La prioridad de fuentes es: decisiones funcionales confirmadas del proyecto, revisión del repositorio y recomendaciones técnicas compatibles. Una propuesta nunca reemplaza una decisión pendiente.
 
 ## Índice
 
