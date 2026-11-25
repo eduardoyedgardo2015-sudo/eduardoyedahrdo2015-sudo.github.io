@@ -1,117 +1,106 @@
 # NEXUS — Plan de implementación
 
-**Propósito:** ordenar la construcción sin implementar varias etapas simultáneamente ni convertir decisiones pendientes en supuestos. Este plan no indica que exista código para las etapas listadas.
+**Propósito:** ordenar el trabajo futuro sin convertir decisiones pendientes en supuestos. Este plan no acredita que una etapa esté implementada ni autoriza despliegues.
 
 ## Reglas de ejecución
 
-- Trabajar una etapa y sus criterios de salida antes de abrir la siguiente.
-- Antes de modificar archivos funcionales, describir alcance, riesgos y pruebas.
-- No cargar tarifas, horarios, capacidades o cantidades no confirmadas.
-- Mantener la página y la identidad visual mientras se incorporan nuevas experiencias.
-- Una función se declara implementada solo después de código, pruebas y documentación verificables.
-- Seguridad, RLS, historial y concurrencia son parte de cada etapa, no trabajo opcional posterior.
+- Trabajar por etapas y cumplir sus criterios de salida antes de continuar.
+- Firebase es la plataforma **DECIDIDA**; la inicialización de su cliente existente no equivale a una función operativa ni a una configuración verificada.
+- Aplicar Security Rules y autorización backend en cada etapa que maneje datos.
+- Incorporar pruebas de Firebase Emulator Suite para reglas, funciones y flujos de integración.
+- Diseñar consultas de Firestore e índices asociados a necesidades reales.
+- Mantener auditoría, idempotencia, concurrencia y validaciones como requisitos transversales.
+- No cargar precios, monedas, horarios, capacidades ni cantidades no aprobadas.
+- Una función solo se marca **IMPLEMENTADO** después de verificar código y pruebas. Un servicio solo se marca **CONFIGURADO** tras verificar su configuración efectiva.
 
 ## Etapa 0 — Cierre funcional y datos operativos
 
-**Prioridad:** bloqueante.
+**Prioridad:** bloqueante para activar operaciones reales.
 
-**Trabajo:** resolver la modalidad de reserva por recurso; reglas de precio dinámico; políticas de cancelación y ausencia; retención de pago; capacidades; membresías y beneficios; reglas de clases; QR y contingencia; datos comerciales requeridos para Mercado Pago. Validar también si la cancha multipropósito se confirma como recurso real y cómo se configura.
+**Trabajo:** cerrar reglas de precios y demanda; cancelaciones, ausencias y demoras; retenciones y vencimientos; horarios e intervalos de inicio; capacidades; políticas de membresías y clases; QR y contingencia; datos comerciales requeridos para pagos. La reserva por recurso completo está **DECIDIDA** y no es una decisión pendiente. No incluir cancha multipropósito ni bádminton como recursos reservables confirmados.
 
-**Criterio de salida:** decisiones aprobadas o registradas explícitamente como no incluidas en la primera apertura. No hacen falta precios ficticios para diseñar el esquema, pero no se habilita venta real sin precio, moneda y condiciones aprobadas.
+**Criterio de salida:** las decisiones necesarias para cada apertura están aprobadas o se documenta expresamente que quedan fuera de ese alcance. No se habilita venta real sin precio, moneda y condiciones aprobadas.
 
-## Etapa 1 — Preparación y arquitectura ejecutable
+## Etapa 1 — Preparación Firebase y entorno de pruebas
 
-**Dependencia:** etapa 0 en cuanto a decisiones que afecten la estructura.
+**Trabajo futuro:** revisar la inicialización Firebase ya existente; separar entornos; definir los servicios que se habilitarán; preparar Firebase Emulator Suite; diseñar Security Rules, estructura documental y consultas; definir estrategia de despliegue estático y manejo de configuración pública/secretos.
 
-**Trabajo:** documentar estructura del repositorio; elegir si se conserva JavaScript simple o se adopta un framework, justificándolo; crear separación de entornos; definir despliegue estático; preparar Supabase en desarrollo; migraciones versionadas; verificación automática de documentación/build.
-
-**Criterios de salida:** la página pública existente sigue funcionando; migraciones repetibles en desarrollo; no se exponen secretos; decisiones de frontend y rutas quedan registradas.
+**Criterios de salida:** cliente existente preservado; emuladores disponibles para las pruebas acordadas; reglas y funciones probadas localmente; ningún secreto en frontend. La documentación no declara configurados servicios externos.
 
 ## Etapa 2 — Identidad, perfiles y permisos
 
-**Trabajo:** registro, correo verificado, sesión, recuperación, perfil (incluida fotografía según la política aprobada), términos; roles, permisos y alcance; RLS; interfaz separada para cliente y personal.
+**Trabajo:** implementar registro, correo verificado, sesión, recuperación y perfil; gestionar fotografía conforme a política aprobada; definir permisos y alcances del personal. Socio es condición comercial vinculada a membresía, no rol de seguridad.
 
-**Pruebas críticas:** cliente A no puede consultar/editar el perfil del cliente B; el cliente no puede elevar su rol; el personal no accede fuera de su alcance; recuperación y verificación funcionan.
+**Pruebas críticas:** cliente A no lee ni modifica los datos de cliente B; un cliente no puede otorgarse privilegios; permisos del personal respetan alcance; flujos de verificación y recuperación; pruebas de Security Rules y backend en Emulator Suite.
 
-**Criterio de salida:** matriz de permisos probada desde API y base de datos, no solamente desde la interfaz.
+**Criterio de salida:** matriz de autorización probada contra reglas y operaciones backend, no solo desde la interfaz.
 
 ## Etapa 3 — Catálogo, calendario y bloqueos
 
-**Trabajo:** sedes/edificios, catálogo aprobado de deportes y recursos, instalaciones individuales, estados, horarios, cierres y mantenimiento. No inventar cantidades. Modelar NEXUS ARENA y NEXUS MULTISPORT como edificios distintos según configuración aprobada. La cancha multipropósito no se carga como recurso productivo hasta que se confirme.
+**Trabajo:** cargar solo el catálogo aprobado, recursos individuales, edificios, estados operativos, horarios, cierres y mantenimiento. Las cuatro mesas de tenis de mesa son recursos independientes; no inventar cantidades adicionales. No cargar recursos conceptuales pendientes como operativos.
 
-**Pruebas críticas:** recurso cerrado o en mantenimiento no ofrece horarios; la cancha multipropósito, si se aprueba, no puede asignarse a usos incompatibles; las cuatro mesas pueden administrarse individualmente una vez cargadas como datos aprobados.
+**Pruebas críticas:** recursos cerrados o en mantenimiento no ofrecen horarios; reglas de calendario y bloqueos; consultas respaldadas por índices necesarios y justificados.
 
-**Criterio de salida:** disponibilidad derivada de reglas persistidas, con datos de desarrollo claramente no productivos.
+**Criterio de salida:** disponibilidad derivada de datos aprobados, con datos de desarrollo claramente no productivos.
 
-## Etapa 4 — Tarifas y motor de reservas
+## Etapa 4 — Precios y motor propio de reservas
 
-**Dependencia:** etapas 2 y 3; reglas de etapa 0.
+**Dependencia:** etapas 2 y 3 y reglas aprobadas en etapa 0.
 
-**Trabajo:** cotización; niveles de demanda bajo/normal/alto/muy alto; desglose; duraciones de 30–120 minutos en intervalos de 15; retención online; reserva presencial confirmada con pago pendiente; estados e historial; cancelación y procedimiento de demora/ausencia.
+**Trabajo:** cotización backend; niveles de demanda baja/normal/alta/muy alta; snapshot al confirmar; duraciones decididas de 30, 45, 60, 75, 90, 105 y 120 minutos; retenciones para pago online; reserva presencial confirmada con pago pendiente; transiciones e historial canónico `reservationEvents`; cancelación y revisión de ausencias/demoras.
 
-**Pruebas críticas:** dos solicitudes simultáneas por una franja incompatible; expiración de retención; snapshot de precio; cambios de demanda no alteran reservas confirmadas; aviso de demora impide revocación automática ciega; transiciones no autorizadas se rechazan.
+**Pruebas críticas:** dos solicitudes simultáneas incompatibles; expiración y conciliación de retención; precio congelado; reintentos idempotentes; aviso de demora y revisión antes de cualquier revocación; transiciones no autorizadas rechazadas. Las pruebas deben usar Emulator Suite y el mecanismo de concurrencia elegido.
 
-**Criterio de salida:** una sola reserva puede ganar un recurso/intervalo incompatible; historial completo; reglas y estados verificables.
+**Criterio de salida:** no se confirman reservas incompatibles; cada transición tiene estado anterior/nuevo, fecha, actor, motivo e información relevante; el historial no está duplicado.
 
 ## Etapa 5 — Pagos y créditos
 
 **Dependencia:** etapa 4 y configuración comercial de Mercado Pago.
 
-**Trabajo:** creación de checkout por función backend; webhook verificado; registro de pagos presenciales; estados; idempotencia; conciliación; crédito por cancelación pagada del cliente; vencimientos y uso parcial.
+**Trabajo:** crear checkout desde backend; verificar webhooks; registrar pagos presenciales por personal autorizado; conciliar eventos; emitir y consumir créditos por movimientos auditables. La cancelación elegible de reserva pagada genera crédito, no reembolso automático.
 
-**Pruebas críticas:** webhook repetido, tardío y fuera de orden; pago fallido; retención vencida; crédito parcial; vencimiento; ajuste manual con permiso/motivo; no duplicar pago ni crédito.
+**Pruebas críticas:** webhooks repetidos, tardíos y fuera de orden; pago fallido; pago luego de vencer una retención; consumo parcial; vencimiento y ajustes con permiso/motivo; ningún pago o crédito duplicado. Usar sandbox de Mercado Pago antes de considerar producción.
 
-**Criterio de salida:** pruebas de sandbox y recuperación de fallas aprobadas; el retorno del navegador no aprueba pagos.
+**Criterio de salida:** solo backend confirma pagos; la conciliación recupera efectos incompletos sin duplicarlos.
 
 ## Etapa 6 — Membresías y renovaciones
 
-**Trabajo:** catálogo editable de planes, beneficios, suscripciones, vigencia, estado, renovación manual y opción automática mediante Mercado Pago.
+**Trabajo:** implementar planes conceptuales decididos (NEXUS MUSCULACIÓN, NEXUS FITNESS, NEXUS COMBINADO y NEXUS FULL), estado, vigencias y renovaciones manuales o automáticas según se apruebe cada plan. Períodos, precios, beneficios y reglas comerciales continúan pendientes.
 
-**Pruebas críticas:** membresía no activa sin el pago requerido; expiración; renovación automática verificada; renovación manual; falla; cambio de plan sin alterar operaciones históricas; acceso según beneficio.
+**Pruebas críticas:** vigencia y acceso derivados del estado verificado; renovación manual; renovación automática habilitada y validada por proveedor; fallos y reintentos; cambios sin alterar el historial.
 
-**Criterio de salida:** estado de membresía y derecho de acceso reproducibles desde datos e historial.
+**Criterio de salida:** derechos y estado de membresía son reproducibles desde datos e historial.
 
 ## Etapa 7 — Clases grupales
 
-**Trabajo:** clases, sesiones, instructores, horarios, instalaciones, capacidad, pago individual, derecho por membresía, límites ilimitados/semanales/mensuales, inscripciones, lista de espera y asistencia.
+**Trabajo:** definir clases, sesiones, instructores, capacidad, inscripciones, asistencia, listas de espera y elegibilidad. Aplicar reglas comerciales aprobadas para límites y pago individual.
 
-**Pruebas críticas:** concurrencia al último cupo; inscripción duplicada; sobreconsumo semanal/mensual; cancelación y ajuste de uso de acuerdo con regla aprobada; asignación de lista sin duplicar plaza.
+**Pruebas críticas:** concurrencia al último cupo; inscripciones duplicadas; límites por plan; cancelación y ajuste de uso conforme a política; asignación idempotente de lista de espera.
 
 **Criterio de salida:** cupos y uso de beneficios consistentes bajo reintentos y solicitudes concurrentes.
 
 ## Etapa 8 — QR y control de acceso
 
-**Trabajo:** QR temporal, validación backend, alcance explícito, método manual, eventos de entrada/salida, ocupación, capacidad del gimnasio, lista de espera y alertas por permanencia/salida faltante.
+**Trabajo:** QR temporal validado en backend, alcance aprobado, alternativa manual para personal, registro de entrada/salida, control de ocupación, capacidad del gimnasio, alertas y lista de espera. No confundir ingreso al gimnasio con acceso general al parque.
 
-**Pruebas críticas:** QR vencido, reutilizado, para otro ámbito o de socio inhabilitado; capacidad completa; registro manual auditado; salida y reconciliación; no liberar automáticamente por permanencia prolongada.
+**Pruebas críticas:** QR vencido, reutilizado, con alcance incorrecto o usuario no habilitado; capacidad completa; registro manual auditado; salida y reconciliación; alertas por permanencia/salida faltante. No liberar plazas automáticamente por falta de salida.
 
-**Criterio de salida:** validación online y alternativa manual, aforo transaccional y procedimiento de contingencia aprobado.
+**Criterio de salida:** validación backend, alternativa manual y procedimiento de contingencia aprobado. No revocar automáticamente reservas por ausencia.
 
 ## Etapa 9 — Paneles y comunicaciones
 
-**Trabajo:** dashboard y módulos por rol para recepción, entrenadores y administradores; notificaciones por correo; Resend solo si se selecciona; reglas de anticipación y eventos.
+**Trabajo:** interfaces según permisos para cliente, recepción, instructores y administración; notificaciones por correo; seleccionar Resend solo tras evaluar y aprobarlo.
 
-**Pruebas críticas:** alcance por rol; accesibilidad/usabilidad móvil; reintentos de correo; no enviar notificaciones duplicadas fuera de la política; errores de proveedor visibles al personal autorizado.
+**Pruebas críticas:** autorización por alcance; accesibilidad y experiencia móvil; reintentos sin notificaciones duplicadas; errores del proveedor visibles al personal autorizado.
 
-**Criterio de salida:** el personal puede completar flujos de trabajo documentados sin acceder a funciones ajenas a su rol.
+**Criterio de salida:** personal completa flujos documentados sin acceder a funciones ajenas a su alcance.
 
-## Etapa 10 — Preparación de apertura y mantenimiento
+## Etapa 10 — Preparación operativa
 
-**Trabajo:** pruebas de extremo a extremo; seguridad; pruebas de concurrencia y pagos; revisión de datos publicados; copias de seguridad/restauración; monitoreo; capacitación; manual de recepción y emergencias; soporte.
+**Trabajo:** pruebas de extremo a extremo, privacidad, seguridad, concurrencia y pagos; revisión de datos públicos; backups y restauración; monitoreo, capacitación y procedimientos de recepción/incidentes.
 
-**Criterio de salida:** aprobación del responsable del negocio, operaciones críticas probadas, recuperación ensayada, secretos rotables, contenido público actualizado sin presentar servicios no disponibles como operativos.
+**Criterio de salida:** responsable del negocio aprueba la apertura; operaciones críticas y recuperación están probadas; servicios necesarios aparecen **CONFIGURADOS** solo con evidencia; el contenido público no presenta como disponible algo no confirmado.
 
-## Priorización transversal
+## Estado del plan
 
-1. Privacidad, autorización, RLS, auditoría e idempotencia.
-2. Disponibilidad y consistencia del motor de reservas.
-3. Pago verificable y conciliación.
-4. Membresías, clases y sus derechos de uso.
-5. Acceso, aforo, entradas/salidas y listas de espera confirmadas.
-6. Experiencia visual, notificaciones, informes y mejoras operativas, manteniendo accesibilidad en todas las etapas.
-
-La prioridad no elimina funciones del alcance; define dependencias para reducir riesgos.
-
-## Registro de estado
-
-Este plan describe trabajo futuro. A la fecha de revisión documental, no hay etapas funcionales de la plataforma implementadas en el repositorio. Registrar en cambios futuros: etapa, PR/commit, archivos, decisiones, pruebas, limitaciones y pendientes.
+Todas las etapas funcionales descritas son futuras. La única pieza Firebase observada en el código es la inicialización del cliente; no acredita funciones operativas. No se declaran etapas completadas ni servicios de producción configurados.

@@ -1,10 +1,10 @@
 # NEXUS — Documento maestro funcional
 
-**Estado del documento:** requisitos funcionales consolidados. Las marcas CONFIRMADO, PROPUESTO y PENDIENTE distinguen decisiones aprobadas de asuntos abiertos. Este documento no certifica que las funciones estén implementadas.
+**Estado:** autoridad funcional de NEXUS. Este documento distingue **DECIDIDO**, **PROPUESTO**, **PENDIENTE**, **IMPLEMENTADO** y **CONFIGURADO**. Una propuesta no es una decisión aprobada; documentar una función no demuestra que esté implementada ni que un servicio esté configurado.
 
 ## 1. Identidad, visión y objetivos
 
-**CONFIRMADO.** NEXUS es un parque deportivo, recreativo y gastronómico: deporte, naturaleza y encuentro. Su propuesta combina actividad física, entretenimiento, gastronomía, espacios verdes y encuentro para personas de distintas edades y niveles de experiencia. No debe presentarse como solamente un gimnasio o un conjunto de canchas.
+**DECIDIDO.** NEXUS es un complejo deportivo, recreativo, natural y gastronómico: deporte, naturaleza y encuentro. Su propuesta combina actividad física, entretenimiento, gastronomía, espacios verdes y encuentro para personas de distintas edades y niveles de experiencia. No debe presentarse como solamente un gimnasio o un conjunto de canchas.
 
 Frases de identidad contempladas: «¡Mucho más que deporte!» y «Deporte, naturaleza y encuentro». La identidad visual actual debe conservarse y evolucionar sin perder personalidad.
 
@@ -16,17 +16,17 @@ Frases de identidad contempladas: «¡Mucho más que deporte!» y «Deporte, nat
 
 ### NEXUS ARENA
 
-**CONFIRMADO como parte del concepto:** edificio deportivo independiente. El catálogo funcional previsto incluye básquet y vóley, además de musculación, entrenamiento y clases grupales. La configuración operativa de cada actividad, recurso y horario debe administrarse sin inventar cantidades.
+**DECIDIDO como parte del concepto:** edificio deportivo independiente. El catálogo de recursos reservables incluye básquet y vóley. Musculación, entrenamiento y clases grupales son actividades contempladas, no recursos reservables adicionales confirmados. La configuración operativa debe administrarse sin inventar cantidades.
 
-**PENDIENTE DE VALIDACIÓN: cancha multipropósito.** En documentación o contenido del sitio puede aparecer como posibilidad de uso de un espacio de ARENA, pero no debe tratarse como instalación confirmada ni cargarse como recurso reservable hasta que el responsable del proyecto confirme expresamente su existencia y configuración. Si se confirma, habrá que definir usos, compatibilidad horaria, dimensiones, capacidad, equipamiento y habilitación efectiva.
+**PENDIENTE:** la existencia y configuración de una cancha multipropósito no están aprobadas. No es un recurso reservable confirmado y no se debe cargar como tal.
 
 ### NEXUS MULTISPORT
 
-**CONFIRMADO como parte del concepto:** segundo edificio deportivo independiente con fútbol cinco cubierto, preparación física, áreas recreativas y cuatro mesas de tenis de mesa. Las cuatro mesas deben poder administrarse individualmente como recursos cuando corresponda.
+**DECIDIDO como parte del concepto:** segundo edificio deportivo independiente con fútbol cinco cubierto, preparación física, áreas recreativas y cuatro mesas de tenis de mesa. Las cuatro mesas son recursos individuales e independientes.
 
 ### Instalaciones exteriores
 
-**CONFIRMADO como catálogo funcional previsto:** fútbol cinco exterior, tenis exterior y pádel. Cada recurso tendrá disponibilidad, calendario, horarios y tarifas independientes. Las cantidades adicionales no están definidas y no se inventan.
+**DECIDIDO como catálogo funcional:** fútbol cinco exterior, tenis exterior y pádel. Cada recurso tendrá disponibilidad, calendario, horarios y tarifas independientes. Las cantidades adicionales no están definidas y no se inventan.
 
 ### Áreas comunes y servicios
 
@@ -34,11 +34,11 @@ El complejo contempla plaza central, fuente, juegos recreativos, senderos, espac
 
 Los espacios comunes son de libre acceso sujeto a las condiciones operativas del parque. El acceso a espacios comunes no equivale a una autorización para usar una instalación reservable o un sector restringido.
 
-Las cantinas deberán poder identificarse como distintos puntos de servicio si se incorporan a la plataforma. **No se confirma** venta online, inventario digital ni integración gastronómica en la primera etapa.
+Las cantinas deberán poder identificarse como distintos puntos de servicio si se incorporan a la plataforma. La venta online, el inventario digital y la integración gastronómica en la primera etapa no están decididos.
 
-### Catálogo de reservas confirmado
+### Catálogo de reservas decidido
 
-Las categorías de recursos reservables online especificadas son:
+Los recursos reservables decididos son:
 
 - Básquet.
 - Vóley.
@@ -50,7 +50,7 @@ Las categorías de recursos reservables online especificadas son:
 
 La base debe representar recursos individualizados cuando sea necesario. No añadir cantidades ni otras disciplinas reservables sin aprobación.
 
-**PENDIENTE:** el sitio actual menciona bádminton como posibilidad de la cancha de ARENA, pero no figura en el catálogo de reservas confirmado. Definir si se conserva como contenido conceptual, se incorpora como disciplina reservable o se retira.
+**PENDIENTE:** si se conserva bádminton como contenido conceptual del sitio. No forma parte del catálogo de recursos reservables decidido.
 
 ## 3. Estados de publicación, operación y disponibilidad
 
@@ -74,9 +74,9 @@ Los clientes solo pueden consultar su propia información. La atención presenci
 
 ## 5. Registro, autenticación y seguridad de cuentas
 
-**CONFIRMADO:** autenticación, recuperación de contraseña y verificación de correo forman parte de los requisitos. Supabase Auth es la plataforma elegida para autenticación.
+**DECIDIDO:** Firebase es la plataforma tecnológica del backend. Firebase Authentication cubrirá autenticación, recuperación de contraseña y verificación de correo. La inicialización del cliente Firebase existente no equivale a flujos funcionales de autenticación ni a configuración verificada de servicios.
 
-El frontend presenta flujos de registro, inicio/cierre de sesión, verificación y recuperación, pero la autorización y el acceso a los datos se validan en backend y base de datos. El cliente no puede otorgarse roles ni modificar pagos, precios, créditos o estados de reserva mediante una petición del navegador.
+El frontend presentará flujos de registro, inicio/cierre de sesión, verificación y recuperación, pero la autorización y el acceso a los datos se validan en backend y Security Rules. El cliente no puede otorgarse permisos administrativos ni modificar privilegios, pagos, precios, créditos o estados de reserva mediante una petición del navegador.
 
 ## 6. Reservas y calendario
 
@@ -94,9 +94,9 @@ Cada instalación debe admitir nombre, deporte, edificio/sector, estado operativ
 6. Confirmar la reserva.
 7. Recibir comprobante o código de reserva y notificación configurada.
 
-Duraciones funcionales confirmadas: **30, 45, 60, 75, 90, 105 y 120 minutos**. El precio se calcula según duración y reglas del recurso. Los intervalos de inicio, márgenes entre turnos y reglas de redondeo quedan pendientes si no se derivan de una política configurada.
+Duraciones **DECIDIDAS**: **30, 45, 60, 75, 90, 105 y 120 minutos**. Los horarios, intervalos de inicio, márgenes, anticipación, vencimientos de retenciones y reglas de redondeo son **PENDIENTES** y configurables. No se cargan valores desconocidos.
 
-La disponibilidad debe provenir de la base de datos. No mostrar como disponible un horario ocupado, bloqueado o retenido. El backend y PostgreSQL son la autoridad final; la interfaz no garantiza disponibilidad hasta completar la transacción.
+La disponibilidad debe provenir de Cloud Firestore y validarse en backend. No mostrar como disponible un horario ocupado, bloqueado o retenido. El navegador no es la autoridad final y la disponibilidad no se garantiza hasta completar la operación transaccional.
 
 ### Estados de reserva
 
@@ -108,9 +108,9 @@ Estados funcionales requeridos:
 - **Finalizada:** actividad terminada.
 - **Cancelada:** cancelación registrada sin borrar el historial.
 - **Revocada:** reserva retirada por personal o proceso autorizado, con motivo y trazabilidad.
-- **Ausente:** inasistencia registrada conforme al procedimiento de revisión.
+- **`no_show` («Ausente»):** inasistencia registrada conforme al procedimiento de revisión. Se elige `no_show` por ser un identificador técnico inequívoco para una reserva incumplida; «Ausente» es la etiqueta visible en español.
 
-Los cambios de estado conservan estado anterior y nuevo, fecha/hora, actor y motivo cuando corresponda. Las transiciones permitidas y su autoridad se validan en backend.
+El historial canónico de cambios de estado será `reservationEvents`: cada transición registra estado anterior y nuevo, fecha/hora, actor, motivo e información relevante. No se duplicará en otra colección de historial de estados. Las transiciones permitidas y su autoridad se validan en backend. Los registros generales de auditoría son independientes y no reemplazan este historial.
 
 ### Confirmación según pago
 
@@ -120,7 +120,7 @@ Los cambios de estado conservan estado anterior y nuevo, fecha/hora, actor y mot
 
 ### Concurrencia
 
-La confirmación final debe protegerse mediante transacciones y restricciones de base de datos contra dos reservas incompatibles del mismo recurso. Se verifican nuevamente disponibilidad, bloqueos, retenciones, duración y precio en el servidor. La disponibilidad que vio el navegador puede quedar obsoleta.
+La confirmación final debe protegerse mediante transacciones de Firestore y una estrategia backend contra dos reservas incompatibles del mismo recurso. Se verifican nuevamente disponibilidad, bloqueos, retenciones, duración y precio en el servidor. La estrategia de concurrencia debe ajustarse a los límites y patrones de Firestore y probarse con solicitudes simultáneas. La disponibilidad que vio el navegador puede quedar obsoleta.
 
 ### Ausencias y demoras
 
@@ -134,15 +134,15 @@ No revocar automáticamente ni liberar el horario ignorando un aviso de demora o
 
 ## 7. Tarifas dinámicas
 
-Niveles confirmados: **demanda baja, demanda normal, demanda alta y demanda muy alta**. El cálculo podrá considerar ocupación, día, horario, temporada, demanda y reglas particulares del recurso.
+Niveles **DECIDIDOS**: **demanda baja, demanda normal, demanda alta y demanda muy alta**. El precio se calcula mediante reglas configurables.
 
-Administración podrá configurar precio base, límites mínimo/máximo, descuentos, recargos, porcentajes, condiciones y vigencias. Se debe conservar el desglose y las reglas aplicadas a la cotización y al precio final. El cliente ve el precio antes de confirmar. Una reserva confirmada conserva su precio aunque las reglas cambien después.
+Administración podrá configurar reglas de precios y sus vigencias cuando se definan. Se conserva el desglose y las reglas aplicadas a la cotización y al precio final. El cliente ve el precio antes de confirmar. Una reserva confirmada conserva su precio aunque las reglas cambien después.
 
-**PENDIENTE:** valores, moneda, algoritmo y pesos de factores, cálculo de ocupación, límites por recurso, redondeo y tratamiento de cotizaciones simultáneas. Ningún ejemplo numérico se considera tarifa real.
+**PENDIENTE:** importes, moneda, fórmula, ponderaciones, criterios para determinar el nivel, límites por recurso y reglas de redondeo. Ningún ejemplo numérico se considera tarifa real.
 
 ## 8. Pagos
 
-Métodos confirmados: pago presencial y pago online con Mercado Pago.
+Modalidades decididas: pago presencial y pago online con Mercado Pago.
 
 Estados: pendiente, pagado, fallido y reembolsado si se habilitan devoluciones. Registrar proveedor, referencia externa, importe, moneda, asociación a reserva/membresía y eventos. El navegador no puede declarar un pago aprobado.
 
@@ -154,15 +154,15 @@ Las renovaciones automáticas de membresías usarán Mercado Pago si el plan y l
 
 El cliente podrá cancelar desde su cuenta; personal autorizado podrá cancelar o revocar de acuerdo con permisos. Se conserva el registro y la historia de estados.
 
-Cuando el cliente cancela una reserva ya pagada, el importe se convierte en crédito para futuras reservas, no en devolución automática. La política de cancelación por NEXUS, cierres y excepciones especiales no está resuelta.
+Las cancelaciones elegibles de reservas pagadas podrán generar créditos para futuras reservas; no son una devolución automática. La política de cancelación por NEXUS, cierres y excepciones especiales no está resuelta.
 
 La billetera contempla importe disponible, origen, vencimiento, fecha, utilización total/parcial y movimientos. La fuente de verdad es un libro mayor de movimientos, no un saldo editable sin trazabilidad. Los ajustes manuales requieren permiso, motivo y actor. El vencimiento configurado al emitir un crédito no cambia retroactivamente si la política general se modifica. No se presume que los créditos paguen membresías.
 
 ## 10. Membresías, planes y renovaciones
 
-El sistema de membresías es distinto del alquiler de recursos, aunque integrado a la misma cuenta. Nombres iniciales propuestos y configurables: **NEXUS MUSCULACIÓN, NEXUS FITNESS, NEXUS COMBINADO y NEXUS FULL**. Son propuestas de catálogo, no confirmación de precios o beneficios.
+El sistema de membresías es distinto del alquiler de recursos, aunque integrado a la misma cuenta. Planes conceptuales **DECIDIDOS**: **NEXUS MUSCULACIÓN, NEXUS FITNESS, NEXUS COMBINADO y NEXUS FULL**. La decisión de conservar sus nombres no confirma precios, beneficios, condiciones, períodos ni reglas comerciales; todos esos detalles permanecen **PENDIENTES**.
 
-Administración configura nombre, descripción, precio, beneficios, duración, actividades incluidas, límites, renovación y disponibilidad. Duraciones: mensual, trimestral, semestral y anual. Deben soportarse renovación manual y automática por plan. El sistema registra vencimientos, renovaciones, pagos y estados.
+Administración podrá configurar nombre, descripción, precio, beneficios, período, actividades incluidas, límites, renovación y disponibilidad. Se contemplan renovaciones manuales o automáticas según el plan. El sistema registrará vencimientos, renovaciones, pagos y estados.
 
 **PENDIENTE:** beneficios exactos, precio y moneda, pausa/baja, prorrateo, intentos fallidos, cambio de plan y consentimiento de cobro recurrente.
 
@@ -170,7 +170,7 @@ Administración configura nombre, descripción, precio, beneficios, duración, a
 
 Cada definición de clase podrá configurar nombre, descripción, instructor, día/hora, duración, instalación, capacidad, estado, inscripciones, lista de espera y asistencia. Las sesiones concretas tienen fecha/hora y cupo.
 
-Los planes pueden incluir clases ilimitadas, un límite semanal o un límite mensual. El sistema descuenta el uso al inscribirse y lo ajusta si la inscripción se cancela conforme a políticas. Se permiten clases individuales pagadas sin membresía.
+**PENDIENTE:** si los planes incluyen clases ilimitadas o límites semanales/mensuales, cómo se computa el uso y si se ofrecerán clases individuales pagadas sin membresía. La inscripción debe validar sesión activa, cupo y elegibilidad conforme a las reglas comerciales aprobadas.
 
 La inscripción debe validar sesión activa, cupo, elegibilidad, límites del plan y pago individual aplicable. La asistencia la registra un entrenador o personal autorizado.
 
@@ -180,7 +180,7 @@ La inscripción debe validar sesión activa, cupo, elegibilidad, límites del pl
 
 ### Acceso al gimnasio
 
-**CONFIRMADO:** el socio con membresía activa habilitada accede sin obligación de reservar. La reserva es opcional, permite controlar capacidad y asegurar disponibilidad. La capacidad máxima es configurable; al alcanzarse se bloquean nuevos ingresos y se ofrece lista de espera. No asumir que una autorización de gimnasio habilita todo el parque.
+**DECIDIDO:** el socio con membresía activa y habilitada puede ingresar sin obligación de reservar en todos los casos. La reserva opcional puede controlar o garantizar capacidad. La capacidad máxima es configurable; al alcanzarse se bloquean nuevos ingresos y se ofrece lista de espera. No asumir que una autorización de gimnasio habilita todo el parque.
 
 ### QR
 
@@ -233,7 +233,7 @@ La configuración de notificaciones contempla activar/desactivar, anticipación,
 
 ## 16. Historial y auditoría
 
-Conservar historiales de reservas y sus estados, pagos/eventos, créditos, membresías/renovaciones, inscripciones, asistencias, accesos, cambios de tarifas y permisos. Cada operación sensible debe identificar actor, fecha y motivo. Corregir mediante nuevos movimientos/estados compensatorios, no borrando registros originales.
+El historial canónico de transiciones de reserva es `reservationEvents`, con estado anterior, estado nuevo, fecha, actor, motivo e información relevante. No se mantendrán historiales de estado duplicados con otros nombres o colecciones. Los registros generales de auditoría son distintos: documentan acciones sensibles en los distintos módulos y no sustituyen el historial específico de reserva. Conservar también los eventos necesarios de pagos, créditos, membresías, inscripciones, asistencias, accesos, tarifas y permisos. Cada operación sensible identifica actor, fecha y motivo. Corregir mediante nuevos movimientos o estados compensatorios, no borrando los registros originales.
 
 ## 17. Diseño, accesibilidad y experiencia
 
@@ -241,11 +241,13 @@ Mantener identidad, logotipo, lenguaje y diseño actual cuando sea técnicamente
 
 ## 18. Qué está implementado hoy y qué no
 
-**IMPLEMENTADO en el repositorio revisado:** página institucional estática en español; secciones conceptuales del complejo; CSS responsive; menú móvil; modal informativo de reservas; configuración vacía para enlace externo, WhatsApp, Instagram, dirección y horarios; imágenes conceptuales.
+**Código existente observado:** página institucional estática en español; secciones conceptuales del complejo; CSS responsive; menú móvil; modal informativo de reservas; inicialización del cliente Firebase en `js/firebase/client.js`; configuración de enlaces y datos oficiales aún sin completar; imágenes conceptuales. Esta descripción no acredita pruebas funcionales ni configuración de servicios.
 
-**NO IMPLEMENTADO:** registro, autenticación, perfiles persistidos, base de datos, motor propio de reservas, calendarios reales, tarifas dinámicas, pagos presenciales u online, webhooks, créditos, membresías, renovación, clases con inscripciones, asistencia, QR, aforo, listas de espera, panel privado, permisos, correo transaccional, auditoría operativa y pruebas de esas funciones.
+La inicialización del cliente Firebase no demuestra que Firebase Authentication, Cloud Firestore, Cloud Storage, Cloud Functions, Security Rules o App Check estén configurados o habilitados en producción. No se verificó configuración externa.
 
-El sitio menciona Calenda como enlace futuro; el requisito confirmado actual es un motor propio. Calenda no se considera implementado ni fuente de disponibilidad.
+**PENDIENTE de implementación:** flujos funcionales de autenticación; perfiles persistidos; lecturas/escrituras operativas de Firestore; motor propio de reservas; disponibilidad; tarifas dinámicas; pagos presenciales u online; webhooks; créditos; membresías; renovaciones; clases con inscripciones; asistencia; QR; control de aforo; listas de espera; panel privado; permisos; notificaciones transaccionales; auditoría operativa y pruebas funcionales de esos módulos. No se verificó configuración productiva de Security Rules, índices o Storage.
+
+El sistema de reservas futuro será propio, con Firebase como backend; el sitio actual sigue siendo conceptual y no ofrece reservas reales.
 
 ## 19. Criterio de aceptación funcional transversal
 

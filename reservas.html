@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Consultá disponibilidad y gestioná tus reservas de NEXUS.">
+  <title>Reservas | NEXUS</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="reservas.css">
+  <script type="module" src="js/bookings.js"></script>
+</head>
+<body>
+  <div class="topline"></div>
+  <header class="site-header booking-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="NEXUS, inicio">
+        <img src="assets/nexus-logo.png" alt="NEXUS">
+      </a>
+      <a class="nav-cta" href="index.html#reservas">Volver al sitio</a>
+    </div>
+  </header>
+  <main class="booking-page">
+    <div class="container">
+      <header class="booking-page-heading">
+        <p class="section-kicker">RESERVAS NEXUS</p>
+        <h1>Tu próximo turno<br><span class="blue-text">empieza acá.</span></h1>
+        <p>La disponibilidad y el precio se consultan en el servidor. Un horario solo queda confirmado cuando el backend acepta la reserva.</p>
+      </header>
+
+      <section class="booking-card" aria-labelledby="account-title">
+        <div class="booking-card-heading">
+          <p class="section-kicker">TU CUENTA</p>
+          <h2 id="account-title">Ingresá para reservar</h2>
+        </div>
+        <form id="auth-form" class="booking-auth-form">
+          <label>Correo electrónico
+            <input id="auth-email" type="email" autocomplete="email" required>
+          </label>
+          <label>Contraseña
+            <input id="auth-password" type="password" autocomplete="current-password" minlength="6" required>
+          </label>
+          <div class="booking-form-actions">
+            <button id="auth-submit" class="button button-primary" type="submit">Iniciar sesión</button>
+            <button id="auth-mode-toggle" class="booking-text-button" type="button">Crear cuenta</button>
+          </div>
+          <p id="auth-status" class="booking-status" role="status" aria-live="polite"></p>
+        </form>
+        <div id="account-panel" class="booking-account-panel" hidden>
+          <p id="signed-in-email"></p>
+          <button id="sign-out" class="button button-ghost" type="button">Cerrar sesión</button>
+        </div>
+      </section>
+
+      <section id="booking-panel" class="booking-card" aria-labelledby="booking-title">
+        <div class="booking-card-heading">
+          <p class="section-kicker">NUEVA RESERVA</p>
+          <h2 id="booking-title">Elegí recurso y horario</h2>
+        </div>
+        <form id="booking-form">
+          <div class="booking-fields">
+            <label>Recurso
+              <select id="resource-select" required>
+                <option value="">Cargando recursos…</option>
+              </select>
+            </label>
+            <label>Fecha
+              <input id="booking-date" type="date" required>
+            </label>
+            <label>Duración
+              <select id="duration-select" required>
+                <option value="">Seleccioná un recurso</option>
+              </select>
+            </label>
+          </div>
+          <button id="availability-submit" class="button button-primary" type="submit">Consultar disponibilidad</button>
+          <p id="booking-status" class="booking-status" role="status" aria-live="polite"></p>
+
+          <fieldset id="slot-fieldset" class="slot-fieldset" disabled>
+            <legend>Horarios disponibles</legend>
+            <div id="slot-list" class="slot-list"></div>
+          </fieldset>
+
+          <div id="booking-confirmation" class="booking-confirmation" hidden>
+            <p id="booking-price" class="booking-price"></p>
+            <label>Forma de pago
+              <select id="payment-method">
+                <option value="in_person">Pago presencial</option>
+                <option value="mercado_pago" disabled>Mercado Pago (integración backend pendiente)</option>
+              </select>
+            </label>
+            <p class="booking-payment-note">El pago presencial queda pendiente de registración por personal autorizado. Los pagos online no están habilitados.</p>
+            <button id="confirm-booking" class="button button-primary" type="button">Confirmar reserva</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="booking-card" aria-labelledby="history-title">
+        <div class="booking-card-heading booking-history-heading">
+          <div>
+            <p class="section-kicker">TUS RESERVAS</p>
+            <h2 id="history-title">Historial</h2>
+          </div>
+          <button id="refresh-bookings" class="button button-ghost" type="button" disabled>Actualizar</button>
+        </div>
+        <p id="history-status" class="booking-status" role="status" aria-live="polite">Iniciá sesión para consultar tus reservas.</p>
+        <div id="reservation-list" class="reservation-list"></div>
+        <section id="reservation-detail" class="reservation-detail" aria-live="polite" hidden>
+          <h3>Detalle y eventos</h3>
+          <div id="reservation-detail-content"></div>
+        </section>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>NEXUS · Reservas</span>
+      <a href="index.html">Volver al sitio</a>
+    </div>
+  </footer>
+</body>
+</html>

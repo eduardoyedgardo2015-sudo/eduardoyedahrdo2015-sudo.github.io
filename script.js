@@ -31,12 +31,13 @@
 
   document.querySelectorAll('.booking-trigger').forEach(button => {
     button.addEventListener('click', event => {
+      if (button.getAttribute('href') === 'reservas.html') return;
       if (config.bookingUrl) {
         event.preventDefault();
         window.open(config.bookingUrl, '_blank', 'noopener,noreferrer');
-      } else {
+      } else if (button.getAttribute('href') === '#reservas') {
         event.preventDefault();
-        openModal('El enlace público de Calenda todavía no está configurado. Cuando tengas la URL oficial, agregala en config.js y este botón llevará directamente a las reservas.');
+        openModal('La plataforma de reservas se habilitará cuando estén definidas las configuraciones operativas.');
       }
     });
   });

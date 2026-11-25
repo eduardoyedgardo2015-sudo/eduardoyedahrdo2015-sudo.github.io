@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Administración de reservas de NEXUS.">
+  <title>Administración de reservas | NEXUS</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="reservas.css">
+  <link rel="stylesheet" href="admin.css">
+  <script type="module" src="js/admin-bookings.js"></script>
+</head>
+<body>
+  <div class="topline"></div>
+  <header class="site-header booking-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="NEXUS, inicio">
+        <img src="assets/nexus-logo.png" alt="NEXUS">
+      </a>
+      <a class="nav-cta" href="reservas.html">Área de clientes</a>
+    </div>
+  </header>
+  <main class="booking-page admin-page">
+    <div class="container">
+      <header class="booking-page-heading">
+        <p class="section-kicker">OPERACIONES NEXUS</p>
+        <h1>Administración<br><span class="blue-text">de reservas.</span></h1>
+        <p>Los cambios se validan y guardan en Cloud Functions. La demanda se asigna manualmente; no se calcula a partir de ocupación ni reservas.</p>
+      </header>
+
+      <section class="booking-card admin-auth-card" aria-labelledby="admin-auth-title">
+        <div class="booking-card-heading">
+          <p class="section-kicker">ACCESO RESTRINGIDO</p>
+          <h2 id="admin-auth-title">Personal autorizado</h2>
+        </div>
+        <form id="admin-auth-form" class="booking-auth-form">
+          <label>Correo electrónico
+            <input id="admin-email" type="email" autocomplete="username" required>
+          </label>
+          <label>Contraseña
+            <input id="admin-password" type="password" autocomplete="current-password" required>
+          </label>
+          <div class="booking-form-actions">
+            <button id="admin-sign-in" class="button button-primary" type="submit">Iniciar sesión</button>
+          </div>
+        </form>
+        <div id="admin-session-panel" class="booking-account-panel" hidden>
+          <p id="admin-session-email"></p>
+          <button id="admin-sign-out" class="button button-ghost" type="button">Cerrar sesión</button>
+        </div>
+        <p id="admin-auth-status" class="booking-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <div id="admin-workspace" hidden>
+        <section class="booking-card" aria-labelledby="resource-title">
+          <div class="booking-card-heading">
+            <p class="section-kicker">CONFIGURACIÓN</p>
+            <h2 id="resource-title">Recursos y horarios</h2>
+          </div>
+          <label class="admin-resource-picker">Recurso
+            <select id="admin-resource-select"></select>
+          </label>
+          <div id="configuration-status" class="admin-completeness" role="status" aria-live="polite"></div>
+          <form id="resource-config-form">
+            <div class="admin-toggle">
+              <label for="resource-enabled">Habilitar reservas para este recurso</label>
+              <input id="resource-enabled" type="checkbox">
+            </div>
+            <div class="admin-fields">
+              <label>Zona horaria IANA
+                <input id="resource-time-zone" type="text" placeholder="Ej.: America/Argentina/Buenos_Aires" autocomplete="off">
+              </label>
+              <label>Intervalo de inicio (minutos)
+                <input id="resource-interval" type="number" min="1" step="1" inputmode="numeric">
+              </label>
+            </div>
+            <div class="admin-subsection">
+              <div class="admin-section-heading">
+                <div>
+                  <h3>Horarios semanales</h3>
+                  <p>Agregá una o más franjas por día. Los días sin franjas permanecerán cerrados.</p>
+                </div>
+              </div>
+              <div id="weekly-schedule" class="weekly-schedule"></div>
+            </div>
+            <div class="admin-subsection">
+              <div class="admin-section-heading">
+                <div>
+                  <h3>Excepciones de fechas</h3>
+                  <p>Una fecha puede cerrarse o reemplazar el horario semanal.</p>
+                </div>
+              </div>
+              <div id="date-exception-form" class="admin-inline-form">
+                <label>Fecha
+                  <input id="exception-date" type="date" required>
+                </label>
+                <label class="admin-inline-check">
+                  <input id="exception-closed" type="checkbox">
+                  Cerrado todo el día
+                </label>
+                <label class="exception-windows-field">Franjas (una por línea, HH:MM-HH:MM)
+                  <textarea id="exception-windows" rows="3" placeholder="09:00-12:00&#10;14:00-18:00"></textarea>
+                </label>
+                <button id="save-exception" class="button button-ghost" type="button">Agregar / actualizar excepción</button>
+              </div>
+              <div id="exception-list" class="admin-record-list"></div>
+            </div>
+            <div class="admin-subsection">
+              <div class="admin-section-heading">
+                <div>
+                  <h3>Tarifas manuales</h3>
+                  <p>Completá solo importes aprobados. Se guardan con la precisión admitida por la moneda.</p>
+                </div>
+              </div>
+              <div class="admin-fields admin-currency-field">
+                <label>Moneda (código ISO 4217)
+                  <input id="price-currency" type="text" maxlength="3" placeholder="ARS" autocomplete="off">
+                </label>
+              </div>
+              <div id="pricing-grid" class="pricing-grid-wrap"></div>
+            </div>
+            <div class="admin-form-footer">
+              <button id="save-resource-config" class="button button-primary" type="submit">Guardar configuración del recurso</button>
+              <p id="resource-config-status" class="booking-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="booking-card" aria-labelledby="demand-title">
+          <div class="booking-card-heading">
+            <p class="section-kicker">DEMANDA MANUAL</p>
+            <h2 id="demand-title">Asignaciones por período</h2>
+          </div>
+          <p class="admin-help">Los períodos se interpretan con la zona horaria configurada para el recurso. No pueden solaparse con otra asignación activa del mismo recurso.</p>
+          <form id="demand-form" class="admin-fields">
+            <input id="demand-assignment-id" type="hidden">
+            <label>Desde (fecha y hora local)
+              <input id="demand-start" type="datetime-local" required>
+            </label>
+            <label>Hasta (fecha y hora local)
+              <input id="demand-end" type="datetime-local" required>
+            </label>
+            <label>Nivel
+              <select id="demand-level" required>
+                <option value="">Seleccioná un nivel</option>
+                <option value="baja">Baja</option>
+                <option value="normal">Normal</option>
+                <option value="alta">Alta</option>
+                <option value="muy_alta">Muy alta</option>
+              </select>
+            </label>
+            <div class="admin-form-actions">
+              <button id="save-demand" class="button button-primary" type="submit">Guardar asignación</button>
+              <button id="cancel-demand-edit" class="button button-ghost" type="button" hidden>Cancelar edición</button>
+            </div>
+            <p id="demand-status" class="booking-status" role="status" aria-live="polite"></p>
+          </form>
+          <div id="demand-list" class="admin-record-list"></div>
+        </section>
+
+        <section class="booking-card admin-booking-management" aria-labelledby="admin-bookings-title">
+          <div class="booking-card-heading">
+            <p class="section-kicker">OPERACIÓN</p>
+            <h2 id="admin-bookings-title">Gestión de reservas</h2>
+          </div>
+          <p class="admin-help">Los estados antiguos se presentan de forma compatible: las reservas `confirmed` y `awaiting_payment` se muestran como pendientes; `revoked` y `no_show` se conservan en el historial como cancelaciones legadas. Sus documentos y eventos no se migran ni eliminan.</p>
+          <div class="admin-booking-tabs" role="group" aria-label="Tipo de reservas">
+            <button id="show-active-bookings" class="button button-primary" type="button" aria-pressed="true">Activas</button>
+            <button id="show-booking-history" class="button button-ghost" type="button" aria-pressed="false">Historial</button>
+          </div>
+          <form id="admin-bookings-form" class="admin-booking-filters">
+            <label>Fecha local
+              <input id="admin-bookings-date" type="date">
+            </label>
+            <label>Recurso
+              <select id="admin-bookings-resource">
+                <option value="">Todos los recursos</option>
+              </select>
+            </label>
+            <label>Estado de reserva
+              <select id="admin-bookings-state">
+                <option value="">Todos</option>
+                <option value="pending">Pendiente</option>
+                <option value="in_progress">En proceso</option>
+                <option value="completed">Finalizada</option>
+                <option value="cancelled">Cancelada</option>
+              </select>
+            </label>
+            <label>Estado de pago
+              <select id="admin-bookings-payment">
+                <option value="">Todos</option>
+                <option value="pending">Pendiente de pago</option>
+                <option value="paid">Pagada</option>
+              </select>
+            </label>
+            <label>Cliente (UID o correo exacto)
+              <input id="admin-bookings-customer" type="search" autocomplete="off">
+            </label>
+            <label>Buscar por ID exacto
+              <input id="admin-bookings-search" type="search" autocomplete="off">
+            </label>
+            <div class="admin-booking-filter-actions">
+              <button id="load-admin-bookings" class="button button-primary" type="submit">Buscar reservas</button>
+              <button id="clear-admin-bookings-filters" class="button button-ghost" type="button">Limpiar filtros</button>
+            </div>
+          </form>
+          <p id="admin-bookings-status" class="booking-status" role="status" aria-live="polite"></p>
+          <div class="admin-booking-table-wrap">
+            <table class="admin-booking-table">
+              <thead>
+                <tr>
+                  <th scope="col">Identificador</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Recurso</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Inicio</th>
+                  <th scope="col">Fin</th>
+                  <th scope="col">Duración</th>
+                  <th scope="col">Importe</th>
+                  <th scope="col">Reserva</th>
+                  <th scope="col">Pago</th>
+                  <th scope="col">Detalle</th>
+                </tr>
+              </thead>
+              <tbody id="admin-bookings-list"></tbody>
+            </table>
+          </div>
+          <button id="load-more-admin-bookings" class="button button-ghost" type="button" hidden>Ver más reservas</button>
+          <section id="admin-booking-detail" class="reservation-detail" aria-live="polite" hidden>
+            <h3>Detalle completo e historial</h3>
+            <div id="admin-booking-detail-content"></div>
+            <div id="admin-booking-detail-actions" class="admin-form-actions"></div>
+          </section>
+        </section>
+
+        <section class="booking-card" aria-labelledby="blocks-title">
+          <div class="booking-card-heading">
+            <p class="section-kicker">OPERACIÓN</p>
+            <h2 id="blocks-title">Bloqueos de recursos</h2>
+          </div>
+          <p class="admin-help">Registrá mantenimiento o eventos para impedir reservas en esos períodos.</p>
+          <form id="block-form" class="admin-fields">
+            <input id="block-id" type="hidden">
+            <label>Tipo
+              <select id="block-type" required>
+                <option value="">Seleccioná un tipo</option>
+                <option value="mantenimiento">Mantenimiento</option>
+                <option value="evento">Evento</option>
+              </select>
+            </label>
+            <label>Desde (fecha y hora local)
+              <input id="block-start" type="datetime-local" required>
+            </label>
+            <label>Hasta (fecha y hora local)
+              <input id="block-end" type="datetime-local" required>
+            </label>
+            <label class="admin-full-width">Motivo
+              <input id="block-reason" type="text" minlength="2" maxlength="500" required>
+            </label>
+            <div class="admin-form-actions">
+              <button id="save-block" class="button button-primary" type="submit">Crear bloqueo</button>
+              <button id="cancel-block-edit" class="button button-ghost" type="button" hidden>Cancelar edición</button>
+            </div>
+            <p id="block-status" class="booking-status" role="status" aria-live="polite"></p>
+          </form>
+          <div id="block-list" class="admin-record-list"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>NEXUS · Administración de reservas</span>
+      <a href="index.html">Volver al sitio</a>
+    </div>
+  </footer>
+</body>
+</html>

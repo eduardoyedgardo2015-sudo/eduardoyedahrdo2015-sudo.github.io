@@ -1,45 +1,29 @@
-# Documentación maestra de NEXUS
+# Documentación de NEXUS
 
-## Descripción
+Esta carpeta contiene requisitos funcionales, diseño técnico, etapas futuras y decisiones abiertas. La documentación no acredita que una función esté **IMPLEMENTADA** ni que un servicio esté **CONFIGURADO**.
 
-NEXUS es un parque deportivo, recreativo y gastronómico. La plataforma digital debe acompañar la operación integral del complejo —sitio público, clientes y socios, reservas, pagos, membresías, clases, recepción, acceso y administración— y no reducirlo a una página de alquiler de canchas.
+## Inventario documental
 
-## Estado del repositorio
+| Archivo | Alcance |
+|---|---|
+| [`DOCUMENTO-MAESTRO.md`](DOCUMENTO-MAESTRO.md) | Autoridad de requisitos funcionales y estado funcional real descrito. |
+| [`ARQUITECTURA-TECNICA.md`](ARQUITECTURA-TECNICA.md) | Arquitectura Firebase y patrones técnicos propuestos. |
+| [`PLAN-DE-IMPLEMENTACION.md`](PLAN-DE-IMPLEMENTACION.md) | Etapas futuras, dependencias y criterios de salida. |
+| [`DECISIONES-PENDIENTES.md`](DECISIONES-PENDIENTES.md) | Decisiones operativas, comerciales y técnicas aún abiertas, separadas de las ya tomadas. |
+| [`DOCUMENTO-MAESTRO-FIRESTORE.md`](DOCUMENTO-MAESTRO-FIRESTORE.md) | Propuesta de arquitectura documental Firestore; se referencia como material existente, no como prueba de configuración o implementación. |
 
-**Repositorio revisado:** `eduardoyedgardo2015-sudo/eduardoyedahrdo2015-sudo.github.io`, rama `main`.
+El documento Firestore se conserva sin cambios. Su contenido no certifica que las colecciones, reglas, índices o funciones descritos existan en un proyecto Firebase.
 
-**Estado observado en la revisión:** sitio estático con `index.html`, `styles.css`, `script.js`, `config.js`, `README.txt` y `assets/`. El HTML presenta el concepto del parque y las interacciones actuales se limitan a navegación, modal informativo y configuración de enlaces. En la revisión no se encontraron backend, esquema de datos, migraciones, autenticación, pagos, reservas reales, membresías, QR ni panel administrativo.
+## Estado observado del proyecto
 
-**Fecha de revisión documental:** 2026-11-22. La revisión describe los archivos accesibles en el repositorio en esa fecha; volver a verificar antes de iniciar una implementación.
+El repositorio contiene una web institucional conceptual y la inicialización del cliente Firebase en `js/firebase/client.js`. Esa inicialización no demuestra que existan flujos funcionales de autenticación, operaciones de Firestore, reservas, pagos ni otros módulos. Tampoco se verificó la configuración externa o productiva de servicios Firebase.
 
-## Cómo leer esta documentación
+La categorización documental es:
 
-Las etiquetas tienen significado estricto:
+- **DECIDIDO:** requisito o decisión aprobada.
+- **PROPUESTO:** diseño sugerido que aún requiere aprobación.
+- **PENDIENTE:** decisión no tomada.
+- **IMPLEMENTADO:** comportamiento comprobado en código y pruebas.
+- **CONFIGURADO:** configuración comprobada en el servicio correspondiente.
 
-- **CONFIRMADO:** requisito o decisión funcional expresamente establecidos por el Documento Maestro y las decisiones del proyecto.
-- **PROPUESTO:** recomendación técnica; no constituye una aprobación funcional ni la selección de un proveedor adicional.
-- **PENDIENTE:** decisión, dato operativo o regla todavía no definida.
-- **IMPLEMENTADO:** comportamiento observado directamente en los archivos actuales.
-- **NO IMPLEMENTADO:** función planificada, pero ausente del repositorio revisado.
-
-La prioridad de fuentes es: decisiones funcionales confirmadas del proyecto, revisión del repositorio y recomendaciones técnicas compatibles. Una propuesta nunca reemplaza una decisión pendiente.
-
-## Índice
-
-1. [Documento maestro funcional](DOCUMENTO-MAESTRO.md)
-2. [Arquitectura técnica](ARQUITECTURA-TECNICA.md)
-3. [Plan de implementación](PLAN-DE-IMPLEMENTACION.md)
-4. [Decisiones pendientes](DECISIONES-PENDIENTES.md)
-
-## Archivos de aplicación examinados
-
-- [`index.html`](../index.html): página pública conceptual en español.
-- [`styles.css`](../styles.css): estilos propios y adaptaciones responsive.
-- [`script.js`](../script.js): menú móvil, modal, enlaces configurables y año actual.
-- [`config.js`](../config.js): campos aún vacíos para canales y datos oficiales.
-- [`README.txt`](../README.txt): instrucciones del sitio estático y advertencia de proyecto conceptual.
-- [`assets/`](../assets/): logo y banner conceptual.
-
-## Regla de cambio
-
-Esta carpeta es documentación de referencia. Los documentos no afirman que una función esté construida hasta que se verifique en código y pruebas. Los cambios funcionales deberán planificarse por etapas, mantener la identidad visual y respetar las decisiones y pendientes descritos aquí.
+No se declara fecha, rama ni estado de despliegue; esos datos no son necesarios para interpretar el inventario.

@@ -1,255 +1,112 @@
 # NEXUS — Arquitectura técnica
 
-**Estado:** arquitectura propuesta, subordinada a los requisitos confirmados en `DOCUMENTO-MAESTRO.md`. Una decisión marcada **PROPUESTO** no es una decisión de producto aprobada.
+**Estado:** arquitectura propuesta, subordinada a los requisitos funcionales **DECIDIDOS** en `DOCUMENTO-MAESTRO.md`. Una propuesta técnica no demuestra implementación ni configuración de un servicio.
 
 ## 1. Principios
 
-1. PostgreSQL/Supabase es la fuente de verdad de perfiles operativos, disponibilidad, reservas, precios aplicados, pagos locales, créditos, membresías, clases, ocupación e historial.
-2. El cliente web solicita operaciones; no es autoridad para confirmar disponibilidad, precio, pago, rol o acceso.
-3. Las operaciones críticas validan identidad, permiso, alcance, estado y reglas en backend.
-4. Mantener GitHub Pages para frontend estático mientras cubra las necesidades de rutas, dominios y despliegue.
-5. Preservar la identidad visual existente y separar la experiencia pública de las áreas autenticadas.
-6. Registrar cambios financieros y operativos de manera auditable e idempotente.
-7. No cargar datos productivos sin confirmación: recursos, cantidades, precios, horarios, capacidades y políticas.
+1. **DECIDIDO:** Firebase es el backend principal: Firebase Authentication, Cloud Firestore, Security Rules, Cloud Functions y Cloud Storage.
+2. El navegador no es autoridad definitiva sobre disponibilidad, precios, pagos, créditos, permisos ni accesos.
+3. Las operaciones sensibles se validan en backend con autorización, reglas de negocio, transacciones, idempotencia y auditoría.
+4. GitHub Pages continúa como hosting del sitio público mientras sea compatible con las rutas y necesidades del producto.
+5. App Check es una protección complementaria; no reemplaza Authentication, Security Rules ni validaciones backend.
+6. La documentación de un componente no significa que exista en el código o esté configurado en un servicio.
+7. No cargar datos productivos sin aprobación de recursos, cantidades, precios, horarios, capacidades y políticas.
 
 ## 2. Componentes y comunicación
 
 ```text
-Navegador
-├── Sitio público NEXUS
-├── Cuenta del cliente/socio
-├── Interfaz de recepción
-├── Interfaz de entrenadores
-└── Panel administrativo
-        │ HTTPS; sesión de Supabase Auth
-        ├── Supabase Auth: identidad, verificación y recuperación
-        ├── Supabase API + RLS: acceso a filas autorizado
-        ├── Supabase Storage: archivos con políticas de acceso
-        └── Supabase Edge Functions: operaciones confiables
-             ├── cotizar/crear/cancelar reservas
-             ├── pagos y webhook de Mercado Pago
-             ├── créditos y membresías
-             ├── sesiones de clases/lista de espera
-             ├── QR, validación y eventos de acceso
-             └── notificaciones
-                    ├── Mercado Pago
-                    └── Resend (solo si se aprueba)
-        │
-        └── PostgreSQL: datos transaccionales y auditoría
+Navegador (sitio público y futuras experiencias de cliente/personal)
+  ├── Firebase Authentication: identidad y sesión
+  ├── Cloud Firestore: consultas permitidas bajo Security Rules
+  ├── Cloud Storage: archivos con políticas de acceso
+  └── Cloud Functions: operaciones sensibles e integraciones
+       ├── reservas, disponibilidad y cotizaciones
+       ├── pagos y webhook de Mercado Pago
+       ├── créditos, membresías y clases
+       ├── QR, ocupación y eventos de acceso
+       └── notificaciones y conciliación
 
-GitHub Pages: publicación de interfaces estáticas
+Procesos programados: vencimientos, alertas o conciliaciones cuando se apruebe
+su necesidad y política.
+Mercado Pago: proveedor de pago online; eventos verificados por backend.
+Resend: correo transaccional, continúa en evaluación.
+Firebase Emulator Suite: pruebas locales de reglas, funciones e integración.
+GitHub Pages: publicación del frontend estático, sin lógica privada ni secretos.
+App Check: protección complementaria de solicitudes a Firebase.
 ```
 
-### GitHub Pages
+Los procesos programados solo se incorporarán cuando haya un caso operativo definido. No se declaran actualmente creados ni configurados.
 
-**CONFIRMADO como decisión inicial:** conservarlo para el sitio público mientras sea compatible. También puede servir interfaces estáticas si la experiencia, las rutas y el despliegue lo permiten. No ejecuta lógica privada ni almacena secretos. Si se utiliza navegación SPA, hay que resolver rutas bajo el subdirectorio del repositorio o elegir posteriormente un dominio/hosting compatible; no cambiar el hosting como decisión implícita.
+## 3. Estado real y vocabulario
 
-### Supabase
+- **DECIDIDO:** Firebase es la plataforma tecnológica; Mercado Pago es el proveedor de pagos online; Resend sigue en evaluación.
+- **Código existente observado:** inicialización del cliente Firebase en `js/firebase/client.js`. Esto no acredita una función operativa ni configuración del servicio.
+- **PENDIENTE:** flujos funcionales, datos operativos, reglas, funciones, índices, almacenamiento, despliegues y configuración de cada servicio.
+- **CONFIGURADO:** se usará esta categoría únicamente cuando exista evidencia verificable en el servicio correspondiente. No se verificó aquí configuración de producción.
 
-**CONFIRMADO como plataforma elegida:** PostgreSQL, Auth, Storage, Row Level Security (RLS) y Edge Functions. RLS limita el acceso directo mediante la API. Las operaciones de negocio sensibles pasan por funciones de backend cuando la lógica, los secretos, las transacciones o la integración externa lo requieren.
+`DOCUMENTO-MAESTRO-FIRESTORE.md` es una propuesta documental de arquitectura, no evidencia de colecciones, reglas, índices o funciones creados. Se conserva sin modificar.
 
-### Mercado Pago
+## 4. Identidad, autorización y protección
 
-**CONFIRMADO como proveedor de pago:** checkout online, notificaciones/webhooks y renovación automática cuando esté habilitada. La función de servidor inicia y reconcilia operaciones; el retorno del navegador no prueba aprobación.
+Las experiencias distinguen visitante, cliente, socio y personal. Ser socio es una condición comercial vinculada a una membresía activa; no es por sí sola un rol de seguridad. Las autorizaciones del personal tendrán permisos y alcances explícitos.
 
-### Resend
+- Firebase Authentication identifica al usuario; la autenticación no concede permisos administrativos.
+- Security Rules protegen lecturas y escrituras directas a Firestore y Storage con acceso mínimo y denegación por defecto.
+- Cloud Functions valida identidad, permisos, ámbito, estado y reglas para operaciones sensibles; los secretos y credenciales privadas permanecen solo en backend.
+- Un cliente no puede otorgarse privilegios, alterar los propios permisos, confirmar pagos ni modificar precios, estados o créditos.
+- Las funciones que usan Admin SDK deben realizar su propia autorización: no dependen de reglas de cliente como control suficiente.
+- App Check reduce abuso de clientes no autorizados, pero no es un sistema de identidad ni una autorización.
+- No guardar secretos privados ni datos de tarjetas en el frontend. Aplicar políticas de privacidad y acceso específicas a archivos.
 
-**EN EVALUACIÓN:** proveedor de correo transaccional. Verificar dominio, entregabilidad, costos, plantillas y separación del correo de Auth antes de adoptarlo.
+## 5. Modelo documental Firestore
 
-## 3. Tecnologías: confirmadas y no impuestas
+El diseño es documental y orientado a las consultas aprobadas; no reproduce un esquema relacional tabla por tabla. Los nombres y campos de esta sección son **PROPUESTOS**, no definitivos ni creados.
 
-| Tecnología | Estado | Motivo/alcance |
-|---|---|---|
-| HTML, CSS y JavaScript del sitio | IMPLEMENTADO actualmente | Base institucional revisada. |
-| GitHub Pages | CONFIRMADO para el sitio público mientras sea compatible | Hosting estático; no es backend. |
-| Supabase/PostgreSQL/Auth/Storage/RLS/Edge Functions | CONFIRMADO | Plataforma elegida de datos, identidad y backend. |
-| Mercado Pago | CONFIRMADO | Pagos y renovaciones automáticas configuradas cuando correspondan. |
-| Resend | EN EVALUACIÓN | Correo transaccional. |
-| Framework de frontend | PROPUESTO / pendiente de selección | Elegir solo si mejora rutas, estructura, pruebas y mantenibilidad de la cuenta y el panel. No se impone React ni Next.js. |
-| ORM, Redis, colas o proveedor adicional de hosting | NO DECIDIDO | No agregar hasta que necesidades verificadas lo justifiquen. |
+- **Perfiles y personal:** documentos de perfil separados de las credenciales de Authentication; condición de socio derivada de membresía; asignaciones de personal con permisos y alcance.
+- **Catálogo:** edificios, instalaciones, deportes y recursos reservables. Las cuatro mesas de tenis de mesa son cuatro recursos independientes.
+- **Calendario:** horarios configurables, cierres y bloqueos; disponibilidad obtenida al combinar estos datos con reservas y retenciones válidas.
+- **Reservas:** un documento autoritativo por reserva contiene su estado actual, usuario, recurso, franja y snapshot de precio/política al confirmar. No mantener dos fuentes autoritativas para el mismo estado o saldo.
+- **Historial de reserva:** `reservationEvents` es el historial canónico de transiciones. Cada transición registra estado anterior/nuevo, fecha, actor, motivo e información relevante. No duplicar las transiciones en otra colección de historial. Los registros generales de auditoría son distintos.
+- **Pagos:** documentos separados de reservas, con referencias del proveedor y eventos externos deduplicables. La respuesta del navegador no confirma un pago.
+- **Créditos:** movimientos auditables e idempotentes como fuente de verdad; el saldo no se edita sin un movimiento trazable.
+- **Membresías, clases y acceso:** documentos por entidad y eventos necesarios para estados, sesiones, inscripciones, asistencia, ocupación y entradas/salidas.
 
-## 4. Estructura futura propuesta
+Firestore no ofrece integridad referencial relacional. Usar identificadores estables, validar referencias en backend y elegir subcolecciones o documentos separados según el ciclo de vida, tamaño y consultas. Evitar arrays de crecimiento ilimitado y documentos que se vuelvan puntos de contención. Denormalizar solo para consultas justificadas y establecer cómo se mantiene consistente la copia.
 
-La siguiente estructura es una guía, no un requisito de utilizar tecnologías determinadas:
+## 6. Estados y consistencia
 
-```text
-nexus/
-├── apps/
-│   └── web/
-│       ├── public/assets/
-│       ├── src/
-│       │   ├── public-site/
-│       │   ├── account/
-│       │   ├── reception/
-│       │   ├── trainers/
-│       │   ├── admin/
-│       │   ├── components/
-│       │   ├── features/
-│       │   │   ├── auth/
-│       │   │   ├── catalog/
-│       │   │   ├── reservations/
-│       │   │   ├── pricing/
-│       │   │   ├── payments/
-│       │   │   ├── credits/
-│       │   │   ├── memberships/
-│       │   │   ├── classes/
-│       │   │   └── access/
-│       │   ├── lib/supabase/
-│       │   └── styles/
-│       └── tests/
-├── supabase/
-│   ├── config.toml
-│   ├── migrations/
-│   ├── functions/
-│   │   ├── quote-reservation/
-│   │   ├── create-reservation/
-│   │   ├── cancel-reservation/
-│   │   ├── create-payment/
-│   │   ├── mercadopago-webhook/
-│   │   ├── apply-credit/
-│   │   ├── create-access-token/
-│   │   ├── validate-access/
-│   │   └── send-notification/
-│   └── seed/
-├── docs/
-└── .github/workflows/
-```
+Estados técnicos de reserva: `awaiting_payment`, `confirmed`, `in_progress`, `completed`, `cancelled`, `revoked` y `no_show`. La etiqueta visible de `no_show` es **«Ausente»**. Se elige `no_show` por ser un identificador inequívoco para una reserva incumplida y coherente con la terminología técnica usual.
 
-Las funciones se nombran por responsabilidad. Separar funciones adicionales solo cuando aporte aislamiento o mantenibilidad. Las migraciones guardan el historial reproducible del esquema. Los seeds, si existen, serán de desarrollo y estarán claramente marcados como datos no productivos; nunca representarán precios u horarios reales.
+El estado actual vive en el documento de reserva; cada transición exitosa agrega un único `reservationEvents`. El historial específico no se duplica en `reservationStatusHistory` ni en `reservation_status_history`. `auditLogs` registra acciones generales y no sustituye el historial de reserva.
 
-## 5. Modelo relacional propuesto
+Las operaciones que actualizan varios documentos relacionados deben usar transacciones o escrituras atómicas de Firestore cuando corresponda. Considerar reintentos de transacción, límites de lecturas/escrituras y contención. Leer los datos necesarios antes de escribir, mantener el trabajo transaccional acotado y no ejecutar llamadas externas dentro de una transacción.
 
-Los nombres finales, tipos concretos de PostgreSQL, enumeraciones y políticas deben definirse en migraciones revisadas. Los UUID son una propuesta técnica, no una condición funcional. Las fechas se almacenan en UTC; la zona horaria oficial queda pendiente.
+La prevención de reservas incompatibles necesita una estrategia de exclusión backend probada bajo concurrencia. **PROPUESTO:** reclamar atómicamente documentos de conflicto derivados de la grilla de inicios y duraciones aprobada, junto con la reserva o retención. La granularidad todavía es **PENDIENTE**; no depender solo de una consulta de solapamiento si esa consulta no impide que otra solicitud concurrente reclame el mismo intervalo. Validar expiración de retenciones y reintentos de forma idempotente.
 
-### Organización e identidad
+Webhooks, pagos, créditos, inscripciones y accesos deben admitir eventos repetidos, tardíos o desordenados sin duplicar efectos. Los procesos programados, si se adoptan, deben ser idempotentes y dejar trazabilidad; una tarea programada no revoca automáticamente reservas por ausencia.
 
-- `organizations`: identidad organizativa y estado; permite agrupar una o varias sedes sin asumir cuántas existen.
-- `venues`: organización, nombre, dirección confirmada, zona horaria y estado.
-- `profiles`: relación 1:1 con `auth.users`; nombre, apellido, teléfono, fotografía de perfil, aceptación de términos, número de socio opcional y estado. No duplica contraseñas.
-- `roles`, `permissions`, `role_permissions`: catálogo de roles, acciones y relación de permisos.
-- `user_roles`: usuario, rol y alcance (sede u organización), quién lo concedió y fecha. Asegura que un rol no se aplique fuera de su ámbito.
+## 7. Precios, pagos y créditos
 
-### Edificios, recursos y calendario
+- El backend calcula el precio con reglas configurables de demanda baja, normal, alta o muy alta, sin fórmula, importes, moneda ni ponderaciones inventadas.
+- Al confirmar, se conserva el precio y las condiciones aplicadas. Cambios futuros no alteran reservas ya confirmadas.
+- Pago presencial: la reserva puede confirmarse con pago pendiente de registración por personal autorizado.
+- Pago online: Mercado Pago se inicia y valida en backend. Solo un webhook verificado permite confirmar el pago; el retorno del navegador no lo hace.
+- Conciliar eventos tardíos, repetidos o desordenados y casos donde el pago llega después del vencimiento de una retención.
+- Cancelaciones elegibles de reservas pagadas pueden generar créditos, no un reembolso automático. Registrar emisión, consumo parcial/total y ajustes como movimientos auditables e idempotentes.
+- No almacenar datos de tarjetas ni secretos de Mercado Pago en el cliente.
 
-- `buildings`: sede, nombre y estado.
-- `facilities`: edificio, nombre, tipo, estado activo/mantenimiento/cerrado, capacidad si se define, si admite reserva y política de acceso.
-- `sports`: disciplinas aprobadas.
-- `facility_sports`: relación muchos-a-muchos recurso/deporte y configuración; permite actividades por franjas sin duplicar la instalación.
-- `availability_templates`: recurso, día/periodo, intervalos y vigencia; reglas recurrentes.
-- `schedule_blocks`: recurso, inicio/fin, motivo y actor; cierres y mantenimiento.
-- `booking_policies`: recurso, duraciones permitidas, anticipación y reglas. Debe permitir las duraciones confirmadas de 30–120 minutos cada 15, sin inventar ventanas horarias.
-- `access_policies`: ámbito, requisito de membresía/reserva, política de capacidad y condiciones. No presume acceso a todo el parque.
+## 8. Archivos y notificaciones
 
-### Precio y reservas
+Cloud Storage alojará archivos solo con reglas específicas por usuario/tipo de archivo, límites y validación backend cuando corresponda. La política técnica de la foto de perfil sigue pendiente. No asumir que Storage está operativo.
 
-- `pricing_rules`: recurso/ámbito, base, moneda, límites, descuentos/recargos/porcentajes, condiciones, niveles de demanda y vigencia. No almacenar ejemplos como tarifas reales.
-- `demand_snapshots` o registro equivalente: señales de ocupación/demanda y momento utilizados; opcionalmente materializado para explicar una cotización, sin sustituir reglas.
-- `price_quotes`: usuario, recurso, franja, duración, importe/moneda, desglose, versión de regla y caducidad; conserva lo mostrado durante el proceso.
-- `reservations`: usuario, código único, estado, método de pago, importe/moneda y retención; entidad principal de la reserva.
-- `reservation_items`: recurso, comienzo/fin, duración, importe aplicado y copia de cotización; conserva el precio confirmado.
-- `reservation_participants`: participantes cuando el modelo aprobado requiera identificarlos.
-- `reservation_status_history`: estado anterior/nuevo, fecha, actor y motivo.
-- `delay_notices`: reserva, autor, hora, demora comunicada y revisión; da soporte al procedimiento de ausencias.
+El correo es el canal inicial previsto. Resend continúa **PENDIENTE** de selección; separar la decisión de proveedor de los requisitos de correo de Authentication. No asumir que el envío transaccional está implementado.
 
-Las restricciones y transacciones deben impedir solapamientos incompatibles del mismo recurso. Hay que decidir por recurso si la unidad es una reserva completa o plazas/personas. El mecanismo específico (por ejemplo, restricción de rangos de PostgreSQL o bloqueo transaccional equivalente) se valida en pruebas de concurrencia.
+## 9. Consultas e índices
 
-### Pagos, créditos y devoluciones
+Diseñar primero las consultas reales para reservas por usuario/recurso/periodo, pagos y eventos, movimientos de crédito, membresías activas, sesiones e inscripciones de clases, accesos, ocupación y auditoría. Crear índices de Firestore solo cuando una consulta implementada los requiera y verificar su costo y límites. No declarar índices creados porque estén documentados.
 
-- `payments`: usuario, reserva o membresía, proveedor, referencia externa, método, importe/moneda y estado.
-- `payment_events`: proveedor e ID de evento único, pago, tipo, fecha de procesamiento y referencia al mínimo de payload necesario.
-- `refunds`: pago, importe, motivo, estado y referencia del proveedor, solo si se habilitan devoluciones.
-- `credit_accounts`: cuenta del cliente.
-- `credit_ledger`: entradas de emisión, consumo, reversión/ajuste, origen, reserva, importe, vencimiento, actor y motivo. El saldo se deriva de movimientos; no se borra un movimiento ya aplicado.
+## 10. Pruebas y despliegue
 
-### Membresías, clases y límites
+Usar Firebase Emulator Suite para pruebas locales de Security Rules, Cloud Functions, Firestore, Authentication y Storage donde corresponda. Incluir pruebas de aislamiento entre clientes, privilegios del personal, reserva simultánea, idempotencia, pagos repetidos/tardíos, créditos parciales, cupos, QR, entradas/salidas y reglas de archivos.
 
-- `membership_plans`: nombre, descripción, importe/moneda cuando se definan, duración, modo de renovación y estado.
-- `membership_plan_benefits`: actividades incluidas, acceso a sectores y modalidad ilimitada/semanal/mensual con parámetros definidos.
-- `memberships`: usuario, plan, estado, vigencia, renovación y referencias de pago/proveedor.
-- `classes`: actividad, descripción, deporte, instructor, instalación y estado.
-- `class_sessions`: clase, inicio/fin, capacidad y estado.
-- `class_enrollments`: sesión, cliente, estado, fuente del derecho/pago y fechas. Restricción que impida inscripciones duplicadas activas.
-- `class_usage_ledger`: uso, restitución o ajuste de cupo de clase por membresía/periodo; permite auditar límites semanales/mensuales.
-- `class_attendance`: inscripción, resultado, actor y fecha.
-- `waitlist_entries`: tipo (clase/gimnasio), recurso/sesión, usuario, posición/criterio, estado y expiración de oferta. La lista de espera del gimnasio está confirmada; las clases la contemplan; no se presume una lista general de canchas.
-
-### Acceso y operación
-
-- `access_tokens`: usuario, hash/token verificable, alcance, emisión, expiración, uso y revocación. QR temporal, no credencial permanente con datos personales.
-- `access_events`: socio, recurso/ámbito, reserva/membresía relacionada, evento de entrada/salida/rechazo, método QR/manual, resultado, personal responsable y fecha.
-- `occupancy_state`: proyección opcional de ocupación actual/versionada, reconciliable con eventos. No reemplaza el historial de entradas/salidas.
-- `notifications`: destinatario, canal, tipo, estado, referencia del proveedor, programación e intentos.
-- `notification_rules`: tipo de aviso, activación, anticipación y condiciones configurables.
-- `audit_logs`: actor, acción, entidad, referencia, motivo y datos mínimos para reconstruir el cambio.
-- `idempotency_keys`: clave, usuario/operación, hash de solicitud, referencia de resultado y vencimiento; evita efectos duplicados.
-
-### Relaciones principales
-
-`organizations` → `venues` → `buildings` → `facilities`; `facilities` ↔ `sports`; `facilities` → `availability_templates`, `schedule_blocks` y `pricing_rules`; `profiles` → `reservations`, `memberships`, `credit_accounts` y `access_events`; `reservations` → `reservation_items` → `facilities`; `reservations` → `payments`, `payment_events` e historial de estados; `membership_plans` → beneficios → `memberships` → uso de clases; `classes` → `class_sessions` → `class_enrollments` → asistencia; el acceso enlaza perfil con derecho de reserva/membresía y recurso autorizado.
-
-## 6. Estados y transacciones
-
-### Reservas
-
-Los estados funcionales son `awaiting_payment`, `confirmed`, `in_progress`, `completed`, `cancelled`, `revoked` y `absent` (con sus etiquetas en español). `awaiting_payment` es temporal y no equivale a `confirmed`. El pago presencial puede tener reserva `confirmed` y pago `pending`.
-
-### Pagos
-
-Estados funcionales: pendiente, pagado, fallido y reembolsado cuando corresponda. Mantener eventos externos y transiciones auditables.
-
-### Transacciones obligatorias
-
-- **Reserva:** validar disponibilidad y crear reserva/retención como una única operación consistente.
-- **Consumo de crédito:** comprobar saldo/vencimiento y registrar el asiento junto a la reserva.
-- **Clase:** comprobar elegibilidad, límite y cupo antes de la inscripción/consumo.
-- **Acceso:** comprobar derecho y capacidad antes de registrar entrada.
-- **Lista:** asignar plaza a una única persona bajo concurrencia.
-- **Pago:** procesar webhooks idempotentemente y reconciliar efectos parciales.
-
-## 7. Seguridad y protección de información
-
-- HTTPS en todos los entornos.
-- Verificación de correo y recuperación de cuenta.
-- RLS habilitada en tablas accesibles mediante API; política de denegación por defecto y acceso mínimo.
-- El cliente accede a sus datos, salvo operaciones autorizadas para personal.
-- Roles y alcance comprobados en backend, no solo en botones/rutas.
-- `service_role`, secretos de Mercado Pago y otros tokens privados únicamente en el entorno seguro de funciones; nunca en JavaScript, GitHub Pages o el repositorio.
-- Las funciones validan identidad, permiso, entrada, estado y reglas.
-- Webhooks de Mercado Pago autenticados/verificados y reconciliados contra el proveedor.
-- Claves únicas e idempotencia para operaciones de pago y eventos.
-- QR temporal, limitado a un ámbito explícito, validado online por backend.
-- MFA para administradores y superadministradores recomendado; definir su obligatoriedad operativa antes de producción.
-- Control de frecuencia, errores que no revelen datos personales, auditoría, copias de seguridad y ensayo de restauración.
-- Storage privado para datos restringidos; fotos de perfil no deben exponerse sin política de acceso.
-- Minimización, consentimiento, retención, exportación y borrado conforme a legislación aplicable; jurisdicción y política definitiva pendientes.
-
-## 8. Integraciones
-
-- **Mercado Pago (confirmado):** pagos online y renovaciones automáticas habilitadas cuando correspondan; webhooks verificados por backend. Pendientes país, moneda, cuenta, medios y términos de recurrencia.
-- **Resend (en evaluación):** correo de aplicación; evaluar entregabilidad, dominio, costos y relación con correos de Auth.
-- **Supabase (confirmado):** Auth, base de datos, RLS, Storage y Edge Functions. Definir proyectos/entornos, copias, cuotas y políticas.
-- **GitHub Pages (confirmado para el sitio público mientras sea compatible):** publicación estática. Evitar secretos en el contenido público.
-- **WhatsApp:** opción futura; no integrar por defecto.
-
-No se decide un proveedor adicional de colas, caché, analítica o hosting. Incorporarlo solo si los límites medidos lo justifican.
-
-## 9. Despliegue, pruebas y mantenimiento
-
-Separar desarrollo, pruebas y producción en configuraciones/proyectos apropiados. Versionar migraciones y revisar cambios de RLS antes de producción. Desplegar frontend estático mediante CI validando rutas, recursos y variables públicas. Guardar secretos en configuración segura del backend.
-
-Pruebas necesarias:
-
-- Políticas de acceso por rol y aislamiento de clientes.
-- Transacciones y reservas simultáneas.
-- Duraciones y solapamientos.
-- Snapshot de precio.
-- Pagos y webhooks repetidos/fallidos.
-- Créditos parciales/vencidos.
-- Renovaciones.
-- Límites, cupos y listas.
-- QR caducado, reutilizado o con alcance incorrecto.
-- Entradas/salidas y reconciliación.
-- Diseño responsive y accesibilidad.
-- Restauración de copias de seguridad.
-
-Monitorear fallos de pagos, webhooks, correo, reservas y acceso; establecer responsables y procedimientos de recuperación antes de la apertura. No declarar listo un entorno de producción sin validar privacidad, copias de seguridad, restauración y capacitación.
+Separar entornos de desarrollo, pruebas y producción y sus secretos/configuración. GitHub Pages puede seguir sirviendo el frontend estático mientras sea compatible; no ejecuta backend ni contiene secretos. Antes de declarar una función lista, verificar código, pruebas y configuración efectiva del servicio. No hay despliegue ni configuración productiva acreditados por esta documentación.
