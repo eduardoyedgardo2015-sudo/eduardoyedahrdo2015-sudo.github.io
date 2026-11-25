@@ -1,0 +1,49 @@
+.booking-page{min-height:75vh;padding:62px 0 100px;background:radial-gradient(ellipse at 82% 0,rgba(0,125,255,.12),transparent 36%),#080b12}
+.booking-page-heading{max-width:760px;margin:0 auto 34px}
+.booking-page-heading h1{font-size:clamp(48px,7vw,78px);margin:14px 0}
+.booking-page-heading>p:last-child{max-width:620px;color:#a6b0bf;font-size:14px}
+.booking-card{max-width:900px;margin:22px auto;padding:30px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:linear-gradient(145deg,#111927,#0d131e)}
+.booking-card-heading{margin-bottom:20px}
+.booking-card-heading .section-kicker{margin:0 0 9px}
+.booking-card-heading h2{font-size:clamp(28px,4vw,40px);margin:0}
+.booking-auth-form,.booking-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.booking-auth-form label,.booking-fields label,.booking-confirmation label{display:grid;gap:7px;color:#cbd5e1;font-size:12px;font-weight:700}
+.booking-auth-form input,.booking-fields select,.booking-fields input,.booking-confirmation select{width:100%;min-height:46px;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:9px;background:#0a111c;color:#f4f7fb;font:inherit}
+.booking-auth-form input:focus,.booking-fields select:focus,.booking-fields input:focus,.booking-confirmation select:focus{outline:2px solid #168cff;outline-offset:2px}
+.booking-form-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.booking-text-button{border:0;background:none;color:#69caff;font:700 12px inherit;cursor:pointer;text-decoration:underline}
+.booking-status{min-height:1.5em;margin:12px 0 0;color:#9eafc2;font-size:12px}
+.booking-status[data-state="error"]{color:#ffaaa9}
+.booking-status[data-state="success"]{color:#91e7b0}
+.booking-account-panel{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.booking-account-panel p{margin:0;color:#cbd5e1}
+.booking-fields{margin:8px 0 20px}
+.booking-page button:disabled,.booking-page fieldset:disabled{opacity:.55;cursor:not-allowed}
+.slot-fieldset{margin:24px 0 18px;padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:12px}
+.slot-fieldset legend{padding:0 8px;color:#e3edf8;font-weight:800;font-size:13px}
+.slot-list{display:flex;flex-wrap:wrap;gap:9px}
+.slot-option{position:relative}
+.slot-option input{position:absolute;opacity:0;pointer-events:none}
+.slot-option span{display:block;padding:9px 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;color:#dce7f4;font-size:12px;cursor:pointer}
+.slot-option.slot-available span{border-color:rgba(93,220,145,.65);background:rgba(34,150,82,.12);color:#b5f3c9}
+.slot-option.slot-available input:checked+span{border-color:#5ddc91;background:rgba(34,150,82,.3);color:#fff;box-shadow:0 0 0 1px #5ddc91}
+.slot-option.slot-reserved span{border-color:rgba(255,111,111,.55);background:rgba(180,45,45,.12);color:#ffb5b5;cursor:not-allowed}
+.slot-option.slot-blocked span,.slot-option.slot-unavailable span{border-color:rgba(170,180,194,.35);background:rgba(125,139,157,.1);color:#b6c0cd;cursor:not-allowed}
+.slot-option input:disabled+span{cursor:not-allowed}
+.slot-option input:focus-visible+span{outline:2px solid #13c9ff;outline-offset:2px}
+.booking-confirmation{display:grid;grid-template-columns:1fr minmax(200px,.8fr);align-items:end;gap:14px 20px;padding:18px;border-radius:12px;background:rgba(0,129,255,.08)}
+.booking-price{margin:0;color:#fff;font-size:18px;font-weight:800}
+.booking-payment-note{grid-column:1/-1;margin:0;color:#a6b0bf;font-size:11px}
+.booking-confirmation .button{grid-column:1/-1;justify-self:start}
+.booking-history-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.reservation-list{display:grid;gap:10px}
+.reservation-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:10px}
+.reservation-row p{margin:0;color:#dce7f4;font-size:12px}
+.reservation-row small{display:block;margin-top:3px;color:#9eafc2;font-size:10px}
+.reservation-row button{flex:none;padding:8px 12px;border:1px solid rgba(22,140,255,.5);border-radius:999px;background:transparent;color:#9edbff;font-size:11px;font-weight:700;cursor:pointer}
+.reservation-detail{margin-top:20px;padding:18px;border-left:2px solid #168cff;background:rgba(255,255,255,.03)}
+.reservation-detail h3{margin:0 0 12px;font-size:23px}
+.reservation-events{display:grid;gap:8px;padding-left:18px;color:#c2ccda;font-size:11px}
+.reservation-empty{color:#8e9eb2;font-size:12px}
+[hidden]{display:none!important}
+@media(max-width:640px){.booking-page{padding-top:38px}.booking-card{padding:21px 17px}.booking-auth-form,.booking-fields,.booking-confirmation{grid-template-columns:1fr}.booking-confirmation .button{grid-column:auto}.booking-payment-note{grid-column:auto}.reservation-row{align-items:flex-start;flex-direction:column}.booking-account-panel{align-items:flex-start;flex-direction:column}}

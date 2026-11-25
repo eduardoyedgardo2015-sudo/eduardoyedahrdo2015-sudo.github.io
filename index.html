@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="config.js" defer></script>
   <script src="script.js" defer></script>
+  <script type="module" src="js/app.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -28,7 +29,7 @@
         <a href="#experiencias">Experiencias</a>
         <a href="#gastronomia">Gastronomía</a>
         <a href="#preguntas">Preguntas</a>
-        <a class="nav-cta booking-trigger" href="#reservas">Reservar</a>
+        <a class="nav-cta booking-trigger" href="reservas.html">Reservar</a>
       </nav>
     </div>
   </header>
@@ -40,7 +41,7 @@
         <h1 id="hero-title">MUCHO MÁS<br><span>QUE DEPORTE.</span></h1>
         <p class="hero-copy">Un lugar para moverte, encontrarte, disfrutar y vivir nuevas experiencias.</p>
         <div class="hero-actions">
-          <a class="button button-primary booking-trigger" href="#reservas">Conocé cómo reservar <span aria-hidden="true">↗</span></a>
+          <a class="button button-primary booking-trigger" href="reservas.html">Conocé cómo reservar <span aria-hidden="true">↗</span></a>
           <a class="button button-ghost" href="#complejo">Explorar NEXUS</a>
         </div>
         <div class="hero-meta"><span class="pulse-dot"></span> Un proyecto pensado para todas las edades</div>
@@ -104,12 +105,12 @@
           <p>Distintas disciplinas, espacios preparados y turnos organizados para que disfrutes el juego.</p>
         </div>
         <div class="sports-grid">
-          <article class="sport-card sport-large soccer"><div class="sport-symbol">⚽</div><div><p>CANCHAS EXTERIORES + CUBIERTA</p><h3>Fútbol 5</h3><span>Una cancha cubierta en MULTISPORT y una cancha exterior.</span></div><span class="sport-index">01</span></article>
+          <article class="sport-card sport-large soccer"><div class="sport-symbol">⚽</div><div><p>CANCHAS EXTERIORES + CUBIERTA</p><h3>Fútbol 5</h3><span>Una cancha cubierta en MULTISPORT y una exterior.</span></div><span class="sport-index">01</span></article>
           <article class="sport-card basketball"><div class="sport-symbol">◉</div><div><p>NEXUS ARENA</p><h3>Básquet</h3><span>En cancha cubierta multipropósito.</span></div><span class="sport-index">02</span></article>
           <article class="sport-card volleyball"><div class="sport-symbol">⌁</div><div><p>NEXUS ARENA</p><h3>Vóley</h3><span>Un espacio adaptable para jugar en equipo.</span></div><span class="sport-index">03</span></article>
           <article class="sport-card badminton"><div class="sport-symbol">⌁</div><div><p>NEXUS ARENA</p><h3>Bádminton</h3><span>La cancha se adapta para esta disciplina.</span></div><span class="sport-index">04</span></article>
           <article class="sport-card tennis"><div class="sport-symbol">🎾</div><div><p>CANCHA EXTERIOR</p><h3>Tenis</h3><span>Cancha independiente al aire libre.</span></div><span class="sport-index">05</span></article>
-          <article class="sport-card padel"><div class="sport-symbol">◌</div><div><p>CANCHA EXTERIOR</p><h3>Pádel</h3><span>Cancha específica con cerramientos.</span></div><span class="sport-index">06</span></article>
+          <article class="sport-card padel"><div class="sport-symbol">���</div><div><p>CANCHA EXTERIOR</p><h3>Pádel</h3><span>Cancha específica con cerramientos.</span></div><span class="sport-index">06</span></article>
         </div>
         <div class="sports-footnote"><span class="blue-square"></span> La cancha de NEXUS ARENA es un único espacio multipropósito: los deportes se programan en horarios diferentes.</div>
       </div>
@@ -168,7 +169,7 @@
     <section class="booking-section section-pad" id="reservas">
       <div class="container booking-panel">
         <div class="booking-glow"></div>
-        <div class="booking-content"><p class="section-kicker">08 / ORGANIZÁ TU VISITA</p><h2>Tu próximo turno<br><span class="blue-text">empieza acá.</span></h2><p>La propuesta contempla un sistema digital para elegir actividad, instalación, fecha y horario, consultar el precio y recibir un comprobante de reserva.</p><div class="booking-steps"><span><b>01</b> Elegí tu actividad</span><span><b>02</b> Seleccioná día y horario</span><span><b>03</b> Confirmá tu reserva</span></div><a class="button button-primary booking-trigger" href="#reservas">Consultar reservas <span aria-hidden="true">↗</span></a><p class="booking-note" id="booking-note">La plataforma de reservas se habilitará cuando estén definidos los canales oficiales de atención.</p></div>
+        <div class="booking-content"><p class="section-kicker">08 / ORGANIZÁ TU VISITA</p><h2>Tu próximo turno<br><span class="blue-text">empieza acá.</span></h2><p>Elegí recurso, fecha y duración; consultá disponibilidad y precio antes de confirmar la reserva.</p><div class="booking-steps"><span><b>01</b> Elegí tu actividad</span><span><b>02</b> Seleccioná día y horario</span><span><b>03</b> Confirmá tu reserva</span></div><a class="button button-primary booking-trigger" href="reservas.html">Consultar reservas <span aria-hidden="true">↗</span></a><p class="booking-note" id="booking-note">La reserva requiere configuraciones operativas y de precios administradas.</p></div>
         <div class="booking-side"><div class="qr-illustration" aria-hidden="true"><div class="qr-grid"></div><span>NEXUS</span><small>RESERVAS</small></div><p>Reservas claras.<br>Experiencias que conectan.</p></div>
       </div>
     </section>

@@ -1,0 +1,16 @@
+{
+  "name": "nexus-booking-functions",
+  "private": true,
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "test:emulator": "firebase emulators:exec --config ../firebase.emulator-test.json --project demo-nexus-test --only auth,firestore,functions \"NEXUS_FUNCTIONS_EMULATOR_HOST=127.0.0.1:15001 node --test emulator/booking.integration.mjs\""
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.0.0"
+  }
+}
